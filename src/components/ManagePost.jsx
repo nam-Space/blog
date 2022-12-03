@@ -3,7 +3,13 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import { addPost, editPost, getPosts, getUsers } from "../thunk/thunk";
+import {
+    addPost,
+    deletePost,
+    editPost,
+    getPosts,
+    getUsers,
+} from "../thunk/thunk";
 
 const ManagePost = () => {
     const { id, action } = useParams();
@@ -61,8 +67,12 @@ const ManagePost = () => {
         }
     };
 
-    const handleDelete = (id) => {
-        console.log(id);
+    const handleDelete = (id, e) => {
+        e.preventDefault();
+        if (window.confirm("Are you sure to delete this post?")) {
+            dispatch(deletePost(id));
+            navigate("/");
+        }
     };
 
     return (
@@ -136,7 +146,7 @@ const ManagePost = () => {
                     {action === "edit" && (
                         <button
                             className="btn btn-danger w-100"
-                            onClick={() => handleDelete(post?.id)}
+                            onClick={(e) => handleDelete(post?.id, e)}
                         >
                             Delete post
                         </button>
